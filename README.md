@@ -33,3 +33,35 @@ bun run dev
 ```
 
 O endpoint inicial é `GET /health`. Pelo Nginx, ele fica disponível com o prefixo `/api`.
+
+## Configuração
+
+Copie `.env.example` para `.env` e preencha `MONGODB_URI`, `MONGODB_DB`, `ADMIN_PASSWORD`,
+`SESSION_SECRET` (com pelo menos 32 caracteres), `AUDIT_SALT`, `COURSE_CODE` e
+`ALLOWED_HOST_SUFFIXES`. Para desenvolvimento sem Atlas, use `USE_FAKE_DB=1`; nesse modo as
+variáveis de conexão do banco são dispensadas.
+
+No MongoDB Atlas, crie um cluster com replica set (Change Streams exigem replica set), crie um
+usuário de banco com acesso ao banco configurado e permita a origem de desenvolvimento na lista de
+rede. Os índices de projetos, auditoria e TTL de rate limit são criados de forma idempotente na
+inicialização.
+
+## Testes
+
+Execute os comandos dentro de cada serviço:
+
+```bash
+cd apps/frontend
+bun install
+bun run lint
+bun run typecheck
+bun run test
+bun run build
+bun run test:e2e
+```
+
+Para o backend, use os mesmos comandos de lint, typecheck e test em `apps/backend`. Não use
+`bun test`: o projeto usa o runner Vitest configurado nos scripts.
+
+Em produção na Vercel, o SSE respeita o limite de duração da plataforma; o cliente reabre a
+conexão e usa polling a cada 5 segundos quando necessário.

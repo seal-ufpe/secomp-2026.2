@@ -14,4 +14,5 @@ export default [
       'no-undef': 'off',
     },
   },
+  { ignores: ['dist/**', 'node_modules/**'] },
 ];
