@@ -8,12 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { ProjectCard, type ProjectCardData } from "@/components/project-card";
 import { useLiveProjects } from "@/hooks/use-live-projects";
+import { filterProjects, type ProjectOriginFilter } from "@/lib/projects";
 
 export function GalleryClient() {
   const { projects, connectionState } = useLiveProjects();
   const [query, setQuery] = useState("");
   const [origin, setOrigin] = useState("all");
-  const filtered = useMemo(() => projects.filter((project) => (!query || `${project.title} ${project.authorName}`.toLowerCase().includes(query.toLowerCase())) && (origin === "all" || project.origin === origin)), [origin, projects, query]);
+  const filtered = useMemo(() => filterProjects(projects, query, origin as ProjectOriginFilter), [origin, projects, query]);
   const status = connectionState === "live" ? "ao vivo" : connectionState === "polling" ? "atualizando a cada 5 s" : "reconectando";
   return <main className="container min-h-[calc(100vh-140px)] py-12">
     <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"><div><BlockText>Galeria do Minicurso</BlockText><p className="mt-4 text-lg">{projects.length} projetos no ar</p></div><Link href="/cadastrar"><Button>Cadastrar projeto</Button></Link></div>

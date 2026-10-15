@@ -6,7 +6,10 @@ import type { Repositories } from './repositories';
 const globalState = globalThis as typeof globalThis & { __deployRepositories?: Promise<Repositories> };
 
 export function getRepositories(): Promise<Repositories> {
-  if (process.env.USE_FAKE_DB === '1') return Promise.resolve(createFakeRepositories());
+  if (process.env.USE_FAKE_DB === '1') {
+    globalState.__deployRepositories ??= Promise.resolve(createFakeRepositories());
+    return globalState.__deployRepositories;
+  }
   globalState.__deployRepositories ??= (async () => {
     const uri = process.env.MONGODB_URI;
     const dbName = process.env.MONGODB_DB;

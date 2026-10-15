@@ -33,4 +33,6 @@ export type Repositories = {
   rateLimits: RateLimitRepository;
 };
 
+export const PROJECT_REPOSITORIES = Symbol('PROJECT_REPOSITORIES');
+
 export type ChangeListener = (change: ProjectChange) => void;

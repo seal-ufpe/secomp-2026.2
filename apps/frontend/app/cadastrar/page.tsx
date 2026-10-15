@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { createProject } from "@/lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -16,11 +17,14 @@ export default function RegisterPage() {
     event.preventDefault();
     setError("");
     const form = new FormData(event.currentTarget);
-    const response = await fetch("/api/projects", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(form)) });
-    const result = await response.json() as { editToken?: string; error?: { message: string } };
-    if (!response.ok || result.error) { setError(result.error?.message ?? "Não foi possível cadastrar."); return; }
-    if (result.editToken) { try { localStorage.setItem("editToken", result.editToken); } catch { /* storage may be disabled */ } }
-    setDone(true);
+    try {
+      const result = await createProject(Object.fromEntries(form) as Parameters<typeof createProject>[0]);
+      if (result.error) { setError(result.error.message); return; }
+      if (result.editToken) { try { localStorage.setItem("editToken", result.editToken); } catch { /* storage may be disabled */ } }
+      setDone(true);
+    } catch (submissionError) {
+      setError(submissionError instanceof Error ? submissionError.message : "Não foi possível cadastrar.");
+    }
   }
   return <main className="container max-w-2xl py-12"><BlockText>Cadastrar projeto</BlockText>{done ? <div className="mt-8 border-2 border-neon bg-magenta p-8"><h2 className="text-2xl font-black text-neon">Projeto cadastrado!</h2><Button className="mt-6" onClick={() => router.push("/")}>Ver galeria</Button></div> : <form className="mt-8 space-y-5" onSubmit={submit}>
     <div><Label htmlFor="title">Título</Label><Input id="title" name="title" minLength={3} maxLength={60} required /></div>
