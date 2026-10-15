@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AdminController } from './admin/admin.controller';
+import { validateEnvironment } from './app.config';
 import { DatabaseModule } from './database/database.module';
 import { HealthController } from './health/health.controller';
 import { getRepositories } from './projects/get-repositories';
@@ -13,7 +14,10 @@ import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true, validate: validateEnvironment }),
+    DatabaseModule,
+  ],
   controllers: [
     HealthController,
     UsersController,
