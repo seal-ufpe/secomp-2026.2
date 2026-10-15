@@ -1,6 +1,6 @@
-import { EventEmitter } from 'node:events';
 import { randomUUID } from 'node:crypto';
-import type { AuditLog, Project, ProjectInput, ProjectQuery } from './types';
+import { EventEmitter } from 'node:events';
+
 import type {
   AuditRepository,
   ProjectRepository,
@@ -8,37 +8,39 @@ import type {
   Repositories,
   SettingsRepository,
 } from './repositories';
+import type { AuditLog, Project, ProjectInput, ProjectPage, ProjectQuery } from './types';
 
 export class FakeProjectRepository implements ProjectRepository {
   private readonly items = new Map<string, Project>();
   readonly changes = new EventEmitter();
 
-  async list(query: ProjectQuery = {}) {
+  list(query: ProjectQuery = {}): Promise<ProjectPage> {
     const filtered = [...this.items.values()]
-      .filter((project) => query.includeHidden || project.status === 'visible')
-      .filter((project) => !query.origin || project.origin === query.origin)
+      .filter((project) => query.includeHidden === true || project.status === 'visible')
+      .filter((project) => query.origin === undefined || project.origin === query.origin)
       .filter(
         (project) =>
-          !query.q ||
+          query.q === undefined ||
           `${project.title} ${project.authorName}`.toLowerCase().includes(query.q.toLowerCase()),
       )
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-    const start = query.cursor
-      ? Math.max(0, filtered.findIndex((project) => project._id === query.cursor) + 1)
-      : 0;
+    const start =
+      query.cursor !== undefined
+        ? Math.max(0, filtered.findIndex((project) => project._id === query.cursor) + 1)
+        : 0;
     const items = filtered.slice(start, start + 20);
-    return { items, nextCursor: filtered[start + 20]?._id };
+    return Promise.resolve({ items, nextCursor: filtered[start + 20]?._id });
   }
 
-  async findById(id: string) {
-    return this.items.get(id) ?? null;
+  findById(id: string): Promise<Project | null> {
+    return Promise.resolve(this.items.get(id) ?? null);
   }
-  async findByUrlNormalized(urlNormalized: string) {
-    return (
-      [...this.items.values()].find((project) => project.urlNormalized === urlNormalized) ?? null
+  findByUrlNormalized(urlNormalized: string): Promise<Project | null> {
+    return Promise.resolve(
+      [...this.items.values()].find((project) => project.urlNormalized === urlNormalized) ?? null,
     );
   }
-  async create(input: ProjectInput) {
+  async create(input: ProjectInput): Promise<Project> {
     if (await this.findByUrlNormalized(input.urlNormalized)) throw new Error('DUPLICATE_URL');
     const now = new Date();
     const project = {
@@ -52,7 +54,7 @@ export class FakeProjectRepository implements ProjectRepository {
     this.changes.emit('change', { type: 'project.created', project });
     return project;
   }
-  async update(id: string, input: Partial<ProjectInput>) {
+  async update(id: string, input: Partial<ProjectInput>): Promise<Project | null> {
     const current = await this.findById(id);
     if (!current) return null;
     const project = { ...current, ...input, updatedAt: new Date() };
@@ -60,50 +62,53 @@ export class FakeProjectRepository implements ProjectRepository {
     this.changes.emit('change', { type: 'project.updated', project });
     return project;
   }
-  async delete(id: string) {
+  delete(id: string): Promise<boolean> {
     const deleted = this.items.delete(id);
-    if (deleted) this.changes.emit('change', { type: 'project.deleted', project: { _id: id } });
-    return deleted;
+    if (deleted) {
+      this.changes.emit('change', { type: 'project.deleted', project: { _id: id } });
+    }
+    return Promise.resolve(deleted);
   }
-  async setStatus(id: string, status: Project['status']) {
+  setStatus(id: string, status: Project['status']): Promise<Project | null> {
     return this.update(id, { status });
   }
 }
 
 export class FakeAuditRepository implements AuditRepository {
   private readonly items: AuditLog[] = [];
-  async append(log: Omit<AuditLog, '_id'>) {
+  append(log: Omit<AuditLog, '_id'>): Promise<AuditLog> {
     const result = { ...log, _id: randomUUID() };
     this.items.push(result);
-    return result;
+    return Promise.resolve(result);
   }
-  async list() {
-    return [...this.items].reverse();
+  list(): Promise<AuditLog[]> {
+    return Promise.resolve([...this.items].reverse());
   }
 }
 
 export class FakeSettingsRepository implements SettingsRepository {
   private enabled = false;
-  async get() {
-    return { auditPageEnabled: this.enabled };
+  get(): Promise<{ auditPageEnabled: boolean }> {
+    return Promise.resolve({ auditPageEnabled: this.enabled });
   }
-  async setAuditPageEnabled(enabled: boolean) {
+  setAuditPageEnabled(enabled: boolean): Promise<void> {
     this.enabled = enabled;
+    return Promise.resolve();
   }
 }
 
 export class FakeRateLimitRepository implements RateLimitRepository {
   private readonly counters = new Map<string, { count: number; expiresAt: number }>();
-  async consume(key: string, limit: number, windowMs: number) {
+  consume(key: string, limit: number, windowMs: number): Promise<boolean> {
     const now = Date.now();
     const current = this.counters.get(key);
     if (!current || current.expiresAt <= now) {
       this.counters.set(key, { count: 1, expiresAt: now + windowMs });
-      return true;
+      return Promise.resolve(true);
     }
-    if (current.count >= limit) return false;
+    if (current.count >= limit) return Promise.resolve(false);
     current.count += 1;
-    return true;
+    return Promise.resolve(true);
   }
 }
 

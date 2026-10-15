@@ -1,8 +1,11 @@
 import { createHash, randomBytes } from 'node:crypto';
+
+import { Logger } from '@nestjs/common';
+
+import { fetchMetadata } from './metadata';
 import type { Repositories } from './repositories';
 import type { Project, PublicProject } from './types';
-import { fetchMetadata } from './metadata';
-import { normalizeUrl, validateSubmission, type Submission } from './validation';
+import { normalizeUrl, type Submission, validateSubmission } from './validation';
 
 export const PROJECT_SERVICE = Symbol('PROJECT_SERVICE');
 
@@ -20,7 +23,7 @@ const messages: Record<string, string> = {
   honeypot: 'Não foi possível cadastrar o projeto.',
 };
 
-function messageFor(code: string) {
+function messageFor(code: string): string {
   return messages[code] ?? 'Não foi possível cadastrar o projeto.';
 }
 
@@ -29,13 +32,17 @@ export interface MetadataProvider {
 }
 
 export class ProjectService {
+  private readonly logger = new Logger(ProjectService.name);
+
   constructor(
     private readonly repositories: Repositories,
     private readonly metadataProvider: MetadataProvider = { fetch: fetchMetadata },
     private readonly tokenFactory: () => string = () => randomBytes(32).toString('base64url'),
   ) {}
 
-  async list(query: Parameters<Repositories['projects']['list']>[0] = {}) {
+  async list(
+    query: Parameters<Repositories['projects']['list']>[0] = {},
+  ): Promise<{ items: PublicProject[]; nextCursor?: string }> {
     const result = await this.repositories.projects.list(query);
     return {
       ...result,
@@ -45,15 +52,17 @@ export class ProjectService {
 
   async create(input: Submission): Promise<ProjectServiceResult> {
     const reason = validateSubmission(input);
-    if (reason) return { ok: false, code: reason, message: messageFor(reason) };
+    if (reason !== null) return { ok: false, code: reason, message: messageFor(reason) };
     const normalized = normalizeUrl(input.url);
-    if (!normalized) return { ok: false, code: 'invalid_url', message: messageFor('invalid_url') };
-    if (await this.repositories.projects.findByUrlNormalized(normalized.urlNormalized)) {
+    if (normalized === null)
+      return { ok: false, code: 'invalid_url', message: messageFor('invalid_url') };
+    if ((await this.repositories.projects.findByUrlNormalized(normalized.urlNormalized)) !== null) {
       return { ok: false, code: 'duplicate', message: messageFor('duplicate') };
     }
     const metadata = await this.metadataProvider.fetch(input.url);
-    if (metadata.unreachable)
+    if (metadata.unreachable === true) {
       return { ok: false, code: 'unreachable', message: messageFor('unreachable') };
+    }
 
     const editToken = this.tokenFactory();
     let project: Project;
@@ -79,8 +88,7 @@ export class ProjectService {
   }
 
   private toPublicProject(project: Project) {
-    const { editTokenHash, ...publicProject } = project;
-    void editTokenHash;
+    const { editTokenHash: _editTokenHash, ...publicProject } = project;
     return publicProject;
   }
 
@@ -96,7 +104,8 @@ export class ProjectService {
         meta: {},
       });
     } catch (error) {
-      console.error('audit write failed', error);
+      this.logger.warn('audit write failed');
+      this.logger.debug(error);
     }
   }
 }

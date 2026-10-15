@@ -1,13 +1,19 @@
 import 'reflect-metadata';
+
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
+
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+function getPort(value: string | undefined): number {
+  return typeof value === 'string' && value.length > 0 ? Number(value) : 4000;
+}
+
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
 
   app.enableCors();
-  await app.listen(process.env.PORT ? Number(process.env.PORT) : 4000, '0.0.0.0');
+  await app.listen(getPort(process.env.PORT), '0.0.0.0');
 }
 
 void bootstrap();

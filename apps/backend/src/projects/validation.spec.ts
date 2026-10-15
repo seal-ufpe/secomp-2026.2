@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { isAllowedHost, normalizeUrl, validateSubmission } from './validation';
 
 describe('validation', () => {

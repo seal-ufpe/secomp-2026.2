@@ -1,7 +1,8 @@
-import { EventEmitter } from 'node:events';
 import { randomUUID } from 'node:crypto';
+import { EventEmitter } from 'node:events';
+
 import type { Collection, Db } from 'mongodb';
-import type { AuditLog, Project, ProjectInput, ProjectQuery } from './types';
+
 import type {
   AuditRepository,
   ProjectRepository,
@@ -9,8 +10,9 @@ import type {
   Repositories,
   SettingsRepository,
 } from './repositories';
+import type { AuditLog, Project, ProjectInput, ProjectPage, ProjectQuery } from './types';
 
-export async function initializeIndexes(db: Db) {
+export async function initializeIndexes(db: Db): Promise<void> {
   await Promise.all([
     db.collection('projects').createIndex({ urlNormalized: 1 }, { unique: true }),
     db.collection('projects').createIndex({ createdAt: -1 }),
@@ -22,14 +24,16 @@ export async function initializeIndexes(db: Db) {
 class MongoProjects implements ProjectRepository {
   readonly changes = new EventEmitter();
   constructor(private readonly collection: Collection<Project>) {}
-  async list(query: ProjectQuery = {}) {
-    const filter: Record<string, unknown> = query.includeHidden ? {} : { status: 'visible' };
-    if (query.origin) filter.origin = query.origin;
-    if (query.q)
+  async list(query: ProjectQuery = {}): Promise<ProjectPage> {
+    const filter: Record<string, unknown> =
+      query.includeHidden === true ? {} : { status: 'visible' };
+    if (query.origin !== undefined) filter.origin = query.origin;
+    if (query.q !== undefined) {
       filter.$or = [
         { title: { $regex: query.q, $options: 'i' } },
         { authorName: { $regex: query.q, $options: 'i' } },
       ];
+    }
     const items = await this.collection.find(filter).sort({ createdAt: -1 }).limit(21).toArray();
     return { items: items.slice(0, 20), nextCursor: items[20]?._id };
   }
@@ -63,8 +67,9 @@ class MongoProjects implements ProjectRepository {
   }
   async delete(id: string) {
     const result = await this.collection.deleteOne({ _id: id });
-    if (result.deletedCount)
+    if (result.deletedCount > 0) {
       this.changes.emit('change', { type: 'project.deleted', project: { _id: id } });
+    }
     return result.deletedCount > 0;
   }
   setStatus(id: string, status: Project['status']) {
@@ -102,7 +107,7 @@ class MongoRateLimits implements RateLimitRepository {
   async consume(key: string, limit: number, windowMs: number) {
     const now = new Date();
     const current = await this.c.findOne({ key, expiresAt: { $gt: now } });
-    if (current?.count && current.count >= limit) return false;
+    if (current !== null && current.count >= limit) return false;
     await this.c.updateOne(
       { key },
       { $inc: { count: 1 }, $setOnInsert: { expiresAt: new Date(Date.now() + windowMs) } },

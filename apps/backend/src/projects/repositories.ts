@@ -1,4 +1,5 @@
 import type { EventEmitter } from 'node:events';
+
 import type {
   AuditLog,
   Project,
@@ -33,12 +34,12 @@ export interface RateLimitRepository {
   consume(key: string, limit: number, windowMs: number): Promise<boolean>;
 }
 
-export type Repositories = {
+export interface Repositories {
   projects: ProjectRepository;
   audit: AuditRepository;
   settings: SettingsRepository;
   rateLimits: RateLimitRepository;
-};
+}
 
 export const PROJECT_REPOSITORIES = Symbol('PROJECT_REPOSITORIES');
 

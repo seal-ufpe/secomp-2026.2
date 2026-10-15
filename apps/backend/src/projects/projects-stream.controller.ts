@@ -1,5 +1,6 @@
 import { Controller, MessageEvent, Sse } from '@nestjs/common';
-import { fromEvent, interval, merge, map, Observable } from 'rxjs';
+import { fromEvent, interval, map, merge, type Observable } from 'rxjs';
+
 import { getRepositories } from './get-repositories';
 
 @Controller('projects')
@@ -7,13 +8,13 @@ export class ProjectsStreamController {
   @Sse('stream')
   async stream(): Promise<Observable<MessageEvent>> {
     const repositories = await getRepositories();
-    const changes = fromEvent<{
-      type: string;
-      project: { _id: string; editTokenHash?: string; status?: string };
-    }>(repositories.projects.changes, 'change').pipe(
-      map(({ type, project }) => {
-        const { editTokenHash, ...publicProject } = project;
-        void editTokenHash;
+    const changes = fromEvent(repositories.projects.changes, 'change').pipe(
+      map((event) => {
+        const { type, project } = event as {
+          type: string;
+          project: { _id: string; editTokenHash?: string; status?: string };
+        };
+        const { editTokenHash: _editTokenHash, ...publicProject } = project;
         return {
           type,
           data: project.status === 'hidden' ? { _id: project._id, deleted: true } : publicProject,

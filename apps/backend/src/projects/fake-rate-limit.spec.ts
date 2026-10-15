@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { FakeRateLimitRepository } from './fake-repositories';
 
 describe('FakeRateLimitRepository', () => {

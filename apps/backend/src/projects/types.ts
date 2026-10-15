@@ -1,7 +1,7 @@
 export type Origin = 'lovable' | 'base44';
 export type ProjectStatus = 'visible' | 'hidden';
 
-export type Project = {
+export interface Project {
   _id: string;
   title: string;
   authorName: string;
@@ -15,25 +15,28 @@ export type Project = {
   editTokenHash: string;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 export type PublicProject = Omit<Project, 'editTokenHash' | 'status'>;
-export type ProjectInput = Omit<Project, '_id' | 'createdAt' | 'updatedAt' | 'status'> & {
+export interface ProjectInput extends Omit<Project, '_id' | 'createdAt' | 'updatedAt' | 'status'> {
   status?: ProjectStatus;
-};
-export type ProjectPage = { items: Project[]; nextCursor?: string };
-export type ProjectQuery = {
+}
+export interface ProjectPage {
+  items: Project[];
+  nextCursor?: string;
+}
+export interface ProjectQuery {
   cursor?: string;
   origin?: Origin;
   q?: string;
   includeHidden?: boolean;
-};
-export type ProjectChange = {
+}
+export interface ProjectChange {
   type: 'project.created' | 'project.updated' | 'project.deleted';
   project: Project | { _id: string };
-};
+}
 
-export type AuditLog = {
+export interface AuditLog {
   _id: string;
   ts: Date;
   type: string;
@@ -43,4 +46,4 @@ export type AuditLog = {
   reason?: string;
   ipHash: string;
   meta: Record<string, string | number | boolean>;
-};
+}
