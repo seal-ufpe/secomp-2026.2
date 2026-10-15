@@ -5,10 +5,11 @@ import { HealthController } from './health/health.controller';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { ProjectsController } from './projects/projects.controller';
+import { ProjectsStreamController } from './projects/projects-stream.controller';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule],
-  controllers: [HealthController, UsersController, ProjectsController],
+  controllers: [HealthController, UsersController, ProjectsController, ProjectsStreamController],
   providers: [UsersService],
 })
 export class AppModule {}
