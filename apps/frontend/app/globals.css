@@ -26,17 +26,43 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    background-image: linear-gradient(rgba(182, 49, 145, 0.25), rgba(182, 49, 145, 0.25)),
-      repeating-linear-gradient(0deg, transparent 0 28px, rgba(244, 255, 0, 0.12) 29px 31px),
-      repeating-linear-gradient(90deg, rgba(124, 36, 118, 0.3) 0 2px, transparent 2px 180px);
+    font-family: "Courier New", Courier, monospace;
+    background-image:
+      linear-gradient(rgba(89, 26, 112, 0.25), rgba(89, 26, 112, 0.25)),
+      repeating-linear-gradient(90deg, transparent 0 262px, rgba(23, 19, 71, 0.72) 263px 267px),
+      repeating-linear-gradient(0deg, transparent 0 42px, rgba(23, 19, 71, 0.72) 43px 47px),
+      repeating-linear-gradient(0deg, rgba(244, 255, 0, 0.08) 0 2px, transparent 2px 15px);
     background-attachment: fixed;
   }
 }
 
 @layer components {
   .racks-duotone {
-    background-color: #b63191;
-    background-image: repeating-linear-gradient(0deg, rgba(23, 19, 71, 0.35) 0 3px, transparent 3px 31px),
-      repeating-linear-gradient(90deg, rgba(244, 255, 0, 0.18) 0 2px, transparent 2px 160px);
+    position: relative;
+    overflow: hidden;
+    background-color: #96338f;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(23, 19, 71, 0.62) 0 3px, transparent 3px 34px),
+      repeating-linear-gradient(90deg, rgba(23, 19, 71, 0.58) 0 3px, transparent 3px 128px);
+  }
+
+  .racks-duotone::after {
+    position: absolute;
+    inset: 10px;
+    content: "";
+    opacity: 0.75;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 26px, #6d207b 27px 31px, transparent 32px 74px),
+      repeating-linear-gradient(0deg, transparent 0 10px, #c04aaf 11px 14px, transparent 15px 28px);
+    mix-blend-mode: screen;
+  }
+
+  .eyebrow {
+    @apply text-[10px] font-bold uppercase tracking-[0.22em] text-neon;
+  }
+
+  .pixel-rule {
+    height: 4px;
+    background: repeating-linear-gradient(90deg, #171347 0 18px, transparent 18px 28px);
   }
 }
