@@ -6,10 +6,16 @@ import type { Submission } from './validation';
 export class ProjectsController {
   private readonly service: ProjectService;
 
-  constructor(@Inject(PROJECT_SERVICE) service: ProjectService) { this.service = service; }
+  constructor(@Inject(PROJECT_SERVICE) service: ProjectService) {
+    this.service = service;
+  }
 
   @Get()
-  async list(@Query('cursor') cursor?: string, @Query('origin') origin?: 'lovable' | 'base44', @Query('q') q?: string) {
+  async list(
+    @Query('cursor') cursor?: string,
+    @Query('origin') origin?: 'lovable' | 'base44',
+    @Query('q') q?: string,
+  ) {
     return this.service.list({ cursor, origin, q });
   }
 
@@ -17,6 +23,8 @@ export class ProjectsController {
   @HttpCode(201)
   async create(@Body() body: Submission) {
     const result = await this.service.create(body);
-    return result.ok ? { project: result.project, editToken: result.editToken } : { error: { code: result.code, message: result.message } };
+    return result.ok
+      ? { project: result.project, editToken: result.editToken }
+      : { error: { code: result.code, message: result.message } };
   }
 }

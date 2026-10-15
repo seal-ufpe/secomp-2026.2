@@ -17,7 +17,9 @@ describe('FakeProjectRepository', () => {
     const first = await repository.create(input('one.vercel.app', 'Primeiro'));
     await new Promise((resolve) => setTimeout(resolve, 2));
     const second = await repository.create(input('two.vercel.app', 'Segundo'));
-    await expect(repository.create(input('one.vercel.app', 'Duplicado'))).rejects.toThrow('DUPLICATE_URL');
+    await expect(repository.create(input('one.vercel.app', 'Duplicado'))).rejects.toThrow(
+      'DUPLICATE_URL',
+    );
     const page = await repository.list();
     expect(page.items.map((project) => project._id)).toEqual([second._id, first._id]);
   });

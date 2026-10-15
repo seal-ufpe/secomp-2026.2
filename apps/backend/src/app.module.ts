@@ -13,14 +13,21 @@ import { PROJECT_SERVICE, ProjectService } from './projects/project-service';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule],
-  controllers: [HealthController, UsersController, ProjectsController, ProjectsStreamController, AdminController],
+  controllers: [
+    HealthController,
+    UsersController,
+    ProjectsController,
+    ProjectsStreamController,
+    AdminController,
+  ],
   providers: [
     UsersService,
     { provide: PROJECT_REPOSITORIES, useFactory: getRepositories },
     {
       provide: PROJECT_SERVICE,
       inject: [PROJECT_REPOSITORIES],
-      useFactory: (repositories: Awaited<ReturnType<typeof getRepositories>>) => new ProjectService(repositories),
+      useFactory: (repositories: Awaited<ReturnType<typeof getRepositories>>) =>
+        new ProjectService(repositories),
     },
   ],
 })

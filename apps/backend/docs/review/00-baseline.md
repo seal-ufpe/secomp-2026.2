@@ -10,15 +10,15 @@ pipes, exception filters, interceptors, or e2e suite at baseline.
 
 Initial commands were run from `apps/backend`:
 
-| Command | Result |
-| --- | --- |
+| Command                         | Result                               |
+| ------------------------------- | ------------------------------------ |
 | `bun install --frozen-lockfile` | Passed; lockfile was already current |
-| `bun run build` | Passed |
-| `bun run lint` | Passed; no warnings |
-| `bun run typecheck` | Passed |
-| `bun run test` | Passed; 7 files, 13 tests |
-| Coverage | Not configured |
-| E2E | Not configured |
+| `bun run build`                 | Passed                               |
+| `bun run lint`                  | Passed; no warnings                  |
+| `bun run typecheck`             | Passed                               |
+| `bun run test`                  | Passed; 7 files, 13 tests            |
+| Coverage                        | Not configured                       |
+| E2E                             | Not configured                       |
 
 The editor marker reported for `tsconfig.json` could not be reproduced by the
 TypeScript CLI. The current configuration already has `strict: true`, and the
@@ -36,13 +36,13 @@ creates a direct `Db` provider for users.
 
 ### Modules and dependencies
 
-| Module | Controllers | Services/providers | Dependencies |
-| --- | --- | --- | --- |
-| `health` | `HealthController` | none | none |
-| `database` | none | `DATABASE` async MongoDB `Db` provider | `ConfigService`, `mongodb` |
-| `users` | `UsersController` | `UsersService` | `DATABASE` |
+| Module     | Controllers                                      | Services/providers                                                               | Dependencies                               |
+| ---------- | ------------------------------------------------ | -------------------------------------------------------------------------------- | ------------------------------------------ |
+| `health`   | `HealthController`                               | none                                                                             | none                                       |
+| `database` | none                                             | `DATABASE` async MongoDB `Db` provider                                           | `ConfigService`, `mongodb`                 |
+| `users`    | `UsersController`                                | `UsersService`                                                                   | `DATABASE`                                 |
 | `projects` | `ProjectsController`, `ProjectsStreamController` | `ProjectService`; fake and Mongo repositories; metadata and validation functions | repository token, `mongodb`, `fetch`, RxJS |
-| `admin` | `AdminController` | session creation and verification functions | Node crypto, environment variables |
+| `admin`    | `AdminController`                                | session creation and verification functions                                      | Node crypto, environment variables         |
 
 The project repository interface also contains audit, settings, and rate-limit
 repositories. At baseline they are implemented by fake and Mongo repositories,
@@ -50,15 +50,15 @@ but no controller currently exposes the latter operations.
 
 ## Route inventory
 
-| Method | Path | Access | Input DTO/body/query | Possible status |
-| --- | --- | --- | --- | --- |
-| GET | `/health` | public | none | 200 |
-| GET | `/users` | public | none | 200, 500 |
-| POST | `/users` | public | `{ name, email }` structural type only | 201, 400/500 |
-| GET | `/projects` | public | query `cursor`, `origin`, `q` | 200, 500 |
-| POST | `/projects` | public | `Submission` structural type; validation is in service | 201, 200 with domain error, 500 |
-| GET | `/projects/stream` | public | none | 200 SSE, 500 |
-| POST | `/admin/login` | public | `{ password? }` | 201/200, 500 |
+| Method | Path               | Access | Input DTO/body/query                                   | Possible status                 |
+| ------ | ------------------ | ------ | ------------------------------------------------------ | ------------------------------- |
+| GET    | `/health`          | public | none                                                   | 200                             |
+| GET    | `/users`           | public | none                                                   | 200, 500                        |
+| POST   | `/users`           | public | `{ name, email }` structural type only                 | 201, 400/500                    |
+| GET    | `/projects`        | public | query `cursor`, `origin`, `q`                          | 200, 500                        |
+| POST   | `/projects`        | public | `Submission` structural type; validation is in service | 201, 200 with domain error, 500 |
+| GET    | `/projects/stream` | public | none                                                   | 200 SSE, 500                    |
+| POST   | `/admin/login`     | public | `{ password? }`                                        | 201/200, 500                    |
 
 At baseline there is no global route prefix or API versioning, no global
 `ValidationPipe`, no standard exception filter, and CORS is enabled directly in

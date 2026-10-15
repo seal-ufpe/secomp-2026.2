@@ -52,7 +52,8 @@ export class ProjectService {
       return { ok: false, code: 'duplicate', message: messageFor('duplicate') };
     }
     const metadata = await this.metadataProvider.fetch(input.url);
-    if (metadata.unreachable) return { ok: false, code: 'unreachable', message: messageFor('unreachable') };
+    if (metadata.unreachable)
+      return { ok: false, code: 'unreachable', message: messageFor('unreachable') };
 
     const editToken = this.tokenFactory();
     let project: Project;
@@ -69,7 +70,8 @@ export class ProjectService {
         editTokenHash: createHash('sha256').update(editToken).digest('hex'),
       });
     } catch (error) {
-      if (error instanceof Error && error.message === 'DUPLICATE_URL') return { ok: false, code: 'duplicate', message: messageFor('duplicate') };
+      if (error instanceof Error && error.message === 'DUPLICATE_URL')
+        return { ok: false, code: 'duplicate', message: messageFor('duplicate') };
       throw error;
     }
     await this.appendAudit(project);

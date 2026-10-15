@@ -1,5 +1,12 @@
 import type { EventEmitter } from 'node:events';
-import type { AuditLog, Project, ProjectChange, ProjectInput, ProjectPage, ProjectQuery } from './types';
+import type {
+  AuditLog,
+  Project,
+  ProjectChange,
+  ProjectInput,
+  ProjectPage,
+  ProjectQuery,
+} from './types';
 
 export interface ProjectRepository {
   list(query?: ProjectQuery): Promise<ProjectPage>;

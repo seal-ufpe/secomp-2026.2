@@ -18,10 +18,20 @@ export type Project = {
 };
 
 export type PublicProject = Omit<Project, 'editTokenHash' | 'status'>;
-export type ProjectInput = Omit<Project, '_id' | 'createdAt' | 'updatedAt' | 'status'> & { status?: ProjectStatus };
+export type ProjectInput = Omit<Project, '_id' | 'createdAt' | 'updatedAt' | 'status'> & {
+  status?: ProjectStatus;
+};
 export type ProjectPage = { items: Project[]; nextCursor?: string };
-export type ProjectQuery = { cursor?: string; origin?: Origin; q?: string; includeHidden?: boolean };
-export type ProjectChange = { type: 'project.created' | 'project.updated' | 'project.deleted'; project: Project | { _id: string } };
+export type ProjectQuery = {
+  cursor?: string;
+  origin?: Origin;
+  q?: string;
+  includeHidden?: boolean;
+};
+export type ProjectChange = {
+  type: 'project.created' | 'project.updated' | 'project.deleted';
+  project: Project | { _id: string };
+};
 
 export type AuditLog = {
   _id: string;

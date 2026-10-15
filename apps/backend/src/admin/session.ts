@@ -5,7 +5,8 @@ const MAX_AGE = 8 * 60 * 60;
 
 function signature(payload: string) {
   const secret = process.env.SESSION_SECRET;
-  if (!secret || secret.length < 32) throw new Error('SESSION_SECRET deve ter pelo menos 32 caracteres.');
+  if (!secret || secret.length < 32)
+    throw new Error('SESSION_SECRET deve ter pelo menos 32 caracteres.');
   return createHmac('sha256', secret).update(payload).digest('base64url');
 }
 

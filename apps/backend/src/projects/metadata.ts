@@ -1,12 +1,17 @@
 import { isAllowedHost } from './validation';
 
-export async function fetchMetadata(url: string): Promise<{ title?: string; previewImage?: string; unreachable?: boolean }> {
+export async function fetchMetadata(
+  url: string,
+): Promise<{ title?: string; previewImage?: string; unreachable?: boolean }> {
   let current = url;
   try {
     for (let redirect = 0; redirect <= 2; redirect += 1) {
       const parsed = new URL(current);
       if (parsed.protocol !== 'https:' || !isAllowedHost(parsed.hostname)) return {};
-      const response = await fetch(current, { redirect: 'manual', signal: AbortSignal.timeout(3000) });
+      const response = await fetch(current, {
+        redirect: 'manual',
+        signal: AbortSignal.timeout(3000),
+      });
       if (response.status >= 300 && response.status < 400) {
         const location = response.headers.get('location');
         if (!location || redirect === 2) return {};
@@ -27,7 +32,9 @@ export async function fetchMetadata(url: string): Promise<{ title?: string; prev
       }
       const html = new TextDecoder().decode(Buffer.concat(chunks));
       const title = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim();
-      const image = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)/i)?.[1];
+      const image = html.match(
+        /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)/i,
+      )?.[1];
       return { title, previewImage: image?.startsWith('https://') ? image : undefined };
     }
     return {};
