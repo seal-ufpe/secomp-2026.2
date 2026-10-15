@@ -7,4 +7,9 @@ describe("Button", () => {
     render(<Button>Continuar</Button>);
     expect(screen.getByRole("button", { name: "Continuar" })).toBeInTheDocument();
   });
+
+  it("supports variants and asChild links", () => {
+    render(<Button variant="outline" asChild><a href="/cadastrar">Cadastrar</a></Button>);
+    expect(screen.getByRole("link", { name: "Cadastrar" })).toHaveClass("border-primary");
+  });
 });

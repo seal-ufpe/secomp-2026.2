@@ -4,27 +4,39 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.6rem;
+    --background: 245 56% 18%;
+    --foreground: 60 100% 98%;
+    --primary: 62 100% 50%;
+    --primary-foreground: 245 56% 18%;
+    --secondary: 317 54% 45%;
+    --secondary-foreground: 60 100% 98%;
+    --muted: 245 35% 29%;
+    --muted-foreground: 60 20% 85%;
+    --accent: 317 54% 45%;
+    --accent-foreground: 60 100% 98%;
+    --border: 62 100% 50%;
+    --input: 60 100% 98%;
+    --ring: 62 100% 50%;
   }
 
   * {
     @apply border-border;
+    border-radius: 0;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
+    background-image: linear-gradient(rgba(182, 49, 145, 0.25), rgba(182, 49, 145, 0.25)),
+      repeating-linear-gradient(0deg, transparent 0 28px, rgba(244, 255, 0, 0.12) 29px 31px),
+      repeating-linear-gradient(90deg, rgba(124, 36, 118, 0.3) 0 2px, transparent 2px 180px);
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  .racks-duotone {
+    background-color: #b63191;
+    background-image: repeating-linear-gradient(0deg, rgba(23, 19, 71, 0.35) 0 3px, transparent 3px 31px),
+      repeating-linear-gradient(90deg, rgba(244, 255, 0, 0.18) 0 2px, transparent 2px 160px);
   }
 }

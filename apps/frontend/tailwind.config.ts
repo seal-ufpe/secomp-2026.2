@@ -15,6 +15,11 @@ const config: Config = {
     },
     extend: {
       colors: {
+        navy: "#171347",
+        magenta: "#b63191",
+        "magenta-dark": "#7c2476",
+        neon: "#f4ff00",
+        "paper-yellow": "#f4ef64",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -37,11 +42,7 @@ const config: Config = {
           foreground: "hsl(var(--accent-foreground))",
         },
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
+      borderRadius: { none: "0" },
     },
   },
   plugins: [],
