@@ -1,0 +1,37 @@
+services:
+  nginx:
+    container_name: nginx
+    build:
+      context: apps/nginx
+      dockerfile: Dockerfile
+    ports: 
+      - "8080:8080"
+    depends_on:
+      - frontend
+      - example
+    restart: always
+    networks:
+      - private_network
+      - public_network
+    
+  frontend:
+    container_name: frontend
+    build:
+      context: apps/frontend
+      dockerfile: Dockerfile
+    networks:
+      - public_network
+
+  example:
+    container_name: example
+    build:
+      context: apps/example
+      dockerfile: Dockerfile
+    networks:
+      - public_network
+      
+networks:
+  private_network:
+    driver: bridge
+  public_network:
+    driver: bridge
