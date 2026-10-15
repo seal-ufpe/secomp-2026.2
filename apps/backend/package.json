@@ -6,9 +6,10 @@
     "dev": "nest start --watch",
     "start": "bun dist/main.js",
     "start:prod": "bun dist/main.js",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest"
   },

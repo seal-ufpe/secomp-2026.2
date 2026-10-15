@@ -1,3 +1,6 @@
 dist
 node_modules
-drizzle
+coverage
+bun.lock
+*.generated.*
+generated

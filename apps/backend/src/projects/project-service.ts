@@ -20,6 +20,10 @@ const messages: Record<string, string> = {
   honeypot: 'Não foi possível cadastrar o projeto.',
 };
 
+function messageFor(code: string) {
+  return messages[code] ?? 'Não foi possível cadastrar o projeto.';
+}
+
 export interface MetadataProvider {
   fetch(url: string): Promise<{ previewImage?: string; unreachable?: boolean }>;
 }
@@ -41,14 +45,14 @@ export class ProjectService {
 
   async create(input: Submission): Promise<ProjectServiceResult> {
     const reason = validateSubmission(input);
-    if (reason) return { ok: false, code: reason, message: messages[reason] ?? 'Não foi possível cadastrar o projeto.' };
+    if (reason) return { ok: false, code: reason, message: messageFor(reason) };
     const normalized = normalizeUrl(input.url);
-    if (!normalized) return { ok: false, code: 'invalid_url', message: messages.invalid_url };
+    if (!normalized) return { ok: false, code: 'invalid_url', message: messageFor('invalid_url') };
     if (await this.repositories.projects.findByUrlNormalized(normalized.urlNormalized)) {
-      return { ok: false, code: 'duplicate', message: messages.duplicate };
+      return { ok: false, code: 'duplicate', message: messageFor('duplicate') };
     }
     const metadata = await this.metadataProvider.fetch(input.url);
-    if (metadata.unreachable) return { ok: false, code: 'unreachable', message: messages.unreachable };
+    if (metadata.unreachable) return { ok: false, code: 'unreachable', message: messageFor('unreachable') };
 
     const editToken = this.tokenFactory();
     let project: Project;
@@ -65,7 +69,7 @@ export class ProjectService {
         editTokenHash: createHash('sha256').update(editToken).digest('hex'),
       });
     } catch (error) {
-      if (error instanceof Error && error.message === 'DUPLICATE_URL') return { ok: false, code: 'duplicate', message: messages.duplicate };
+      if (error instanceof Error && error.message === 'DUPLICATE_URL') return { ok: false, code: 'duplicate', message: messageFor('duplicate') };
       throw error;
     }
     await this.appendAudit(project);
