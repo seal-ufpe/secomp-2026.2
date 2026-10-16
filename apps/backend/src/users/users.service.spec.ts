@@ -6,11 +6,9 @@ describe('UsersService', () => {
   it('should list users ordered by newest creation', async () => {
     const toArray = vi.fn().mockResolvedValue([{ name: 'Ana' }]);
     const db = {
-      collection: vi
-        .fn()
-        .mockReturnValue({
-          find: vi.fn().mockReturnValue({ sort: vi.fn().mockReturnValue({ toArray }) }),
-        }),
+      collection: vi.fn().mockReturnValue({
+        find: vi.fn().mockReturnValue({ sort: vi.fn().mockReturnValue({ toArray }) }),
+      }),
     };
 
     await expect(new UsersService(db as never).list()).resolves.toEqual([{ name: 'Ana' }]);

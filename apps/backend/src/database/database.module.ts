@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { type Db,MongoClient } from 'mongodb';
+import { type Db, MongoClient } from 'mongodb';
 
 function hasText(value: string | undefined): value is string {
   return typeof value === 'string' && value.length > 0;

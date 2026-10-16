@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   plugins: [
     swc.vite({
-      sourceMaps: false,
+      sourceMaps: true,
       jsc: {
         parser: { syntax: 'typescript', decorators: true },
         transform: { legacyDecorator: true, decoratorMetadata: true },
@@ -34,6 +34,9 @@ export default defineConfig({
         'src/**/index.ts',
         'src/**/*.spec.ts',
         'src/**/*.types.ts',
+        'src/**/types.ts',
+        'src/**/schema.ts',
+        'src/**/repositories.ts',
         'src/**/mocks/**',
       ],
       reporter: ['text', 'lcov', 'html'],

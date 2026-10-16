@@ -9,3 +9,5 @@ Dockerfile
 .env.*
 dist
 *.md
+test
+coverage

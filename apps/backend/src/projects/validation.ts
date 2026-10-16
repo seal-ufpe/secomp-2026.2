@@ -67,10 +67,7 @@ function hasValidIdentity(input: Submission): boolean {
 }
 
 function hasValidDetails(input: Submission): boolean {
-  return (
-    ['lovable', 'base44'].includes(input.origin) &&
-    (input.description?.length ?? 0) <= 140
-  );
+  return ['lovable', 'base44'].includes(input.origin) && (input.description?.length ?? 0) <= 140;
 }
 
 export function validateSubmission(
