@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Activity, Plus } from 'lucide-react';
+import { Activity } from 'lucide-react';
 
 export function TopNav() {
   return (
@@ -15,12 +15,6 @@ export function TopNav() {
             className="flex items-center gap-2 border-b-2 border-neon bg-magenta-dark px-3 py-3 text-neon"
           >
             <Activity size={12} /> Projetos
-          </Link>
-          <Link
-            href="/cadastrar"
-            className="flex items-center gap-2 px-3 py-3 hover:bg-magenta-dark"
-          >
-            <Plus size={12} /> Novo projeto
           </Link>
         </div>
         <span className="hidden items-center gap-2 text-[8px] tracking-[0.12em] text-neon md:flex">

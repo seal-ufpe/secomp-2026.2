@@ -31,12 +31,11 @@ export function GalleryClient() {
         <div className="flex flex-col gap-5 border-l-4 border-neon bg-magenta px-4 py-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <BlockText>Uma linha até o ar.</BlockText>
-            <p className="mt-3 max-w-xl text-[11px]">
-              Acompanhe as conexões e os últimos projetos publicados pela turma, sem sair do
-              controle.
+            <p className="mt-3 ml-2 max-w-xl text-[14px]">
+              Os melhores projetos construídos na secomp 2026, todos disponíveis para você explorar e se inspirar.
             </p>
           </div>
-          <Link href="/cadastrar">
+          <Link href="/register">
             <Button>Novo projeto</Button>
           </Link>
         </div>
