@@ -1,5 +1,6 @@
 services:
   nginx:
+    image: secomp-2026.2-nginx:latest
     container_name: nginx
     build:
       context: apps/nginx
@@ -15,6 +16,7 @@ services:
       - public_network
     
   frontend:
+    image: secomp-2026.2-frontend:latest
     container_name: frontend
     build:
       context: apps/frontend
@@ -24,6 +26,7 @@ services:
     restart: unless-stopped
 
   backend:
+    image: secomp-2026.2-backend:latest
     container_name: backend
     build:
       context: apps/backend

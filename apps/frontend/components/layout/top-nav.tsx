@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Activity } from 'lucide-react';
+import { Activity, BookOpen } from 'lucide-react';
 
 export function TopNav() {
   return (
@@ -15,6 +15,12 @@ export function TopNav() {
             className="flex items-center gap-2 border-b-2 border-neon bg-magenta-dark px-3 py-3 text-neon"
           >
             <Activity size={12} /> Projetos
+          </Link>
+          <Link
+            href="/tutorials"
+            className="flex items-center gap-2 border-b-2 border-transparent px-3 py-3 text-foreground transition-colors hover:border-neon hover:text-neon"
+          >
+            <BookOpen size={12} /> Tutoriais
           </Link>
         </div>
         <span className="hidden items-center gap-2 text-[8px] tracking-[0.12em] text-neon md:flex">
