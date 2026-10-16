@@ -1,1 +1,8 @@
-export default function NotFound() { return <main className="container py-20 text-center"><h1 className="text-4xl font-black text-neon">Página não encontrada</h1><p className="mt-4">O endereço informado não existe.</p></main>; }
+export default function NotFound() {
+  return (
+    <main className="container py-20 text-center">
+      <h1 className="text-4xl font-black text-neon">Página não encontrada</h1>
+      <p className="mt-4">O endereço informado não existe.</p>
+    </main>
+  );
+}

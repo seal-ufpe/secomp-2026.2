@@ -1,6 +1,6 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from '@playwright/test';
 
-test("home page has the gallery heading", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Galeria do Minicurso" })).toBeVisible();
+test('home page has the gallery heading', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Galeria do Minicurso' })).toBeVisible();
 });

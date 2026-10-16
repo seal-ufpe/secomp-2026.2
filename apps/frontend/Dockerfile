@@ -46,7 +46,7 @@ RUN bun run build
 FROM oven/bun:1-slim AS prod
 WORKDIR /app
 ENV NODE_ENV=production PORT=3000 HOSTNAME=0.0.0.0
-RUN addgroup --system app && adduser --system --ingroup app app
+RUN groupadd --system app && useradd --system --gid app --no-create-home app
 COPY --from=build --chown=app:app /app/public ./public
 COPY --from=build --chown=app:app /app/.next/standalone ./
 COPY --from=build --chown=app:app /app/.next/static ./.next/static

@@ -44,15 +44,13 @@ RUN bun run build
 FROM oven/bun:1-slim AS prod
 WORKDIR /app
 ENV NODE_ENV=production PORT=4000
- 
-RUN addgroup --system app && adduser --system --ingroup app app
- 
+
+RUN groupadd --system app && useradd --system --gid app --no-create-home app
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build --chown=app:app /app/dist ./dist
-COPY --from=build --chown=app:app /app/drizzle ./drizzle
 COPY --chown=app:app package.json ./
-COPY --chown=app:app drizzle.config.ts ./
- 
+
 USER app
 EXPOSE 4000
 CMD ["bun", "run", "start"]

@@ -1,3 +1,9 @@
-import { GalleryClient } from "../gallery-client";
+import { GalleryClient } from '../gallery-client';
 
-export default function ScreenPage() { return <main><GalleryClient /></main>; }
+export default function ScreenPage() {
+  return (
+    <main>
+      <GalleryClient />
+    </main>
+  );
+}

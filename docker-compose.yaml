@@ -5,11 +5,11 @@ services:
       context: apps/nginx
       dockerfile: Dockerfile
     ports: 
-      - "8080:8080"
+      - "80:8080"
     depends_on:
       - frontend
-      - example
-    restart: always
+      - backend
+    restart: unless-stopped
     networks:
       - private_network
       - public_network
@@ -21,14 +21,18 @@ services:
       dockerfile: Dockerfile
     networks:
       - public_network
+    restart: unless-stopped
 
-  example:
-    container_name: example
+  backend:
+    container_name: backend
     build:
-      context: apps/example
+      context: apps/backend
       dockerfile: Dockerfile
+    env_file:
+      - ./apps/backend/.env
     networks:
       - public_network
+    restart: unless-stopped
       
 networks:
   private_network:
