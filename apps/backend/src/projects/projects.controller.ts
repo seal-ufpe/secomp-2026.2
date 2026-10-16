@@ -6,9 +6,9 @@ import type { Submission } from './validation';
 
 @Controller('projects')
 export class ProjectsController {
-  private readonly service: ProjectService;
+  private readonly service: Pick<ProjectService, 'list' | 'create'>;
 
-  constructor(@Inject(PROJECT_SERVICE) service: ProjectService) {
+  constructor(@Inject(PROJECT_SERVICE) service: Pick<ProjectService, 'list' | 'create'>) {
     this.service = service;
   }
 

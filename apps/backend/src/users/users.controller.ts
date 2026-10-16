@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 
@@ -9,7 +9,10 @@ interface CreateUserBody {
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    @Inject(UsersService)
+    private readonly usersService: Pick<UsersService, 'list' | 'create'>,
+  ) {}
 
   @Get()
   list(): Promise<unknown[]> {

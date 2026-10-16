@@ -1,6 +1,4 @@
-import { strict as assert } from 'node:assert';
-
-import { afterEach, beforeEach, vi } from 'vitest';
+import { afterEach, beforeEach, expect, vi } from 'vitest';
 
 let consoleError: ReturnType<typeof vi.spyOn>;
 let consoleWarn: ReturnType<typeof vi.spyOn>;
@@ -11,7 +9,9 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  assert.equal(consoleError.mock.calls.length, 0, 'Unexpected console.error');
-  assert.equal(consoleWarn.mock.calls.length, 0, 'Unexpected console.warn');
+  // eslint-disable-next-line vitest/no-standalone-expect -- lifecycle assertion catches unexpected process logs.
+  expect(consoleError).not.toHaveBeenCalled();
+  // eslint-disable-next-line vitest/no-standalone-expect -- lifecycle assertion catches unexpected process logs.
+  expect(consoleWarn).not.toHaveBeenCalled();
   vi.restoreAllMocks();
 });
