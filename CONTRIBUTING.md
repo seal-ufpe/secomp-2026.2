@@ -1,94 +1,125 @@
-# Contribuiting to Cadus
+# Contribuindo com o SECOMP 2026.2
 
- Agradeço o esforço de todos os colaboradores para manter a qualidade, a padronização desse template-bun! Esse template é uma repositório padrão de desenvolvimento qmue visa agilizar a configuração de projetos Bun/Typescript.
+Agradecemos as contribuições para a galeria do minicurso **Do “Preciso disso” ao Deploy:
+Como uma necessidade vira software?**. Este documento apresenta o fluxo recomendado para
+configurar o projeto, desenvolver e enviar alterações.
 
 ## Pré-requisitos
 
-- Node.js (v18+)
-- Bun
+- [Git](https://git-scm.com/)
+- [Bun](https://bun.sh/) instalado
+- [MongoDB](https://www.mongodb.com/) local ou uma instância do MongoDB Atlas para executar o
+  backend
 
-## Como Rodar os Serviços Localmente
+## Configuração local
 
-1. **Clone o repositório**:
+1. Clone o repositório oficial:
+
+   ```bash
+   git clone https://github.com/seal-ufpe/secomp-2026.2.git
+   cd secomp-2026.2
    ```
-   git clone https://github.com/GabrielCassio/template-bun.git
-   cd template-bun
-   ```
 
-2. **Acesse um app**:
-    ``
-    cd apps/example
-    ``
+2. Instale as dependências do frontend:
 
-3. **Instale as dependências**:
-   ```
+   ```bash
+   cd apps/frontend
    bun install
    ```
 
-4. **Configure o ambiente do serviço**:
-   - Crie um arquivo `.env` na raiz do projeto baseado no `.env.example`
-   - Preencha as variáveis necessárias:
-     - `DATABASE_NEON_URL`: URL do seu projeto NEON
-     - `DATABASE_NEON_POOLER`: Pooler do seu projeto NEON
-     - `DATABASE_NEON_ANON_KEY`: Chave anônima do NEON
+3. Em outro terminal, instale as dependências do backend:
 
-5. **Execute o projeto**:
-   ```
-   bun run dev
+   ```bash
+   cd apps/backend
+   bun install
    ```
 
-6. **Ou faça o build para produção**:
-   ```
-   bun run build
-   ```
+4. Configure os arquivos `.env` a partir dos exemplos disponíveis em
+   [`apps/backend/.env.example`](./apps/backend/.env.example) e no diretório do frontend.
+   Para desenvolvimento sem MongoDB Atlas, o backend pode usar `USE_FAKE_DB=1`, conforme
+   descrito no [README do backend](./apps/backend/README.md).
 
-O frontend da aplicação estará disponível em `http://localhost:5173`
+## Executar os serviços
 
-## Como Abrir um Pull Request (PR)
+No frontend:
 
-1. **Fork o repositório**: Clique em "Fork" no GitHub para criar uma cópia em sua conta.
+```bash
+cd apps/frontend
+bun run dev
+```
 
-2. **Clone seu fork**:
-   ```
-   git clone https://github.com/GabrielCassio/template-bun.git
-   cd template-bun
-   ```
+O frontend ficará disponível em [http://localhost:3000](http://localhost:3000).
 
-3. **Crie uma branch para sua feature/bugfix**:
-   ```
+No backend:
+
+```bash
+cd apps/backend
+bun run dev
+```
+
+O endpoint de saúde do backend é [http://localhost:4000/health](http://localhost:4000/health),
+conforme a porta definida na configuração local. Pelo Nginx, a API utiliza o prefixo `/api`.
+
+## Validar alterações
+
+Execute os comandos no serviço que foi alterado:
+
+```bash
+bun run lint
+bun run typecheck
+bun run test
+```
+
+No frontend, também é possível executar:
+
+```bash
+bun run build
+bun run test:e2e
+```
+
+Antes de abrir um pull request, confirme que os testes relevantes passam e que não foram
+incluídos segredos, tokens ou arquivos `.env`.
+
+## Abrir um pull request
+
+1. Crie uma branch a partir da branch principal:
+
+   ```bash
    git checkout -b minha-feature
    ```
 
-4. **Faça suas alterações**:
-   - Teste localmente com `bun run dev`.
-   - Siga o estilo de código do projeto.
+2. Faça as alterações e valide o serviço afetado.
+3. Registre um commit com uma mensagem objetiva:
 
-5. **Commite suas mudanças**:
-   ```
+   ```bash
    git add .
    git commit -m "Descrição clara da mudança"
    ```
 
-6. **Push para sua branch**:
-   ```
+4. Envie a branch para o seu fork:
+
+   ```bash
    git push origin minha-feature
    ```
 
-7. **Abra um Pull Request**:
-   - Vá para seu fork no GitHub e clique em "Compare & pull request".
-   - Descreva suas mudanças e escolha o branch principal do repositório original.
+5. Abra um pull request no repositório
+   [`seal-ufpe/secomp-2026.2`](https://github.com/seal-ufpe/secomp-2026.2/pulls),
+   descrevendo o que foi alterado e como a mudança foi validada.
 
-Antes de enviar, certifique-se de que o código funciona corretamente e segue os padrões do projeto.
+## Documentação de deploy
 
-## Equipe de Colaboradores
+Para criar e publicar um projeto, consulte os tutoriais na pasta [`tutorial`](./tutorial):
 
-<table> 
-    <tr>
-        <td align="center">
-          <a href="https://github.com/GabrielCassio">
-            <img src="https://avatars.githubusercontent.com/u/91679814?v=4" width="100px;" alt="Gabriel Cássio Gomes Cileiro"/><br>
-            <sub><b>Gabriel Cássio Gomes Cileiro</b></sub>
-          </a>
-        </td>
-      </tr>
-</table>
+- [Criar uma conta no Lovable](./tutorial/README-LOVABLE.md)
+- [Criar uma conta na Vercel](./tutorial/README-VERCEL.md)
+- [Integrar Lovable e Vercel](./tutorial/README-INTEGRACAO.md)
+
+Após publicar, cadastre a URL pública na
+[galeria da SECOMP](https://secomp-2026-2.vercel.app/).
+
+## Equipe de colaboração
+
+- Ana Clara
+- Amanda Trinity
+- Gabriel Cássio
+- Luiz Miguel

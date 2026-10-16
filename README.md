@@ -7,6 +7,18 @@ O frontend em [`apps/frontend`](./apps/frontend) apresenta os projetos publicado
 participantes. A API e a persistência MongoDB ficam em [`apps/backend`](./apps/backend), mantendo
 o banco fora do bundle do navegador.
 
+## Tutoriais de publicação
+
+Consulte os guias antes de criar e publicar seu projeto:
+
+- [Criar uma conta no Lovable](./tutorial/README-LOVABLE.md)
+- [Criar uma conta na Vercel](./tutorial/README-VERCEL.md)
+- [Integrar Lovable e Vercel](./tutorial/README-INTEGRACAO.md)
+
+Depois de concluir o deploy, publique o link do seu projeto na [galeria da
+SECOMP](https://secomp-2026-2.vercel.app/). Use uma URL pública e não inclua senhas, tokens ou
+variáveis de ambiente no cadastro.
+
 ## Frontend
 
 O frontend usa Next.js, React, Tailwind CSS e componentes reutilizáveis. O ambiente de testes
@@ -65,3 +77,6 @@ Para o backend, use os mesmos comandos de lint, typecheck e test em `apps/backen
 
 Em produção na Vercel, o SSE respeita o limite de duração da plataforma; o cliente reabre a
 conexão e usa polling a cada 5 segundos quando necessário.
+
+---
+**Desenvolvido por**: Liga Acadêmica de Engenharia de Software (SEAL) - **SECOMP UFPE 2026**
