@@ -42,7 +42,7 @@ export function normalizeUrl(value: string): { urlNormalized: string; host: stri
 
 export function isAllowedHost(
   host: string,
-  suffixes = process.env.ALLOWED_HOST_SUFFIXES ?? '.vercel.app',
+  suffixes = process.env.ALLOWED_HOST_SUFFIXES | '.vercel.app' | '.lovable.app',
 ): boolean {
   return suffixes
     .split(',')
